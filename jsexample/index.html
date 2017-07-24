@@ -1,0 +1,84 @@
+
+
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Linear regression simple tutprial by somto</title>
+      </head>
+      <body>
+        <canvas id="canvas" width="578" height="200"></canvas>
+      </body>
+      <script type="text/javascript">
+        ///note c is generally know as the  starting point
+        // while
+        // m is know as the gradient
+
+        function costfunction(data,m,c) {
+        var result =0;
+        for (var i = 0; i < data.x.length; i++) {
+        result = result + ((data.y[i]-linecalc(m,data.x[i],c))**2);
+        }
+        result=result/data.x.length
+        }
+
+        function linecalc(m,x,c){
+        return m*x + c;
+        }
+
+        function stepgradient(params2,data,lr){
+          var params={m:0,c:0};
+          for (var i = 0; i < data.x.length; i++) {
+            params.m=params.m - 2/data.x.length*data.x[i]*(data.y[i] - ((params2.m * data.x[i])+params2.c))
+            params.c=params.c - 2/data.x.length*(data.y[i] - ((params2.m * data.x[i])+params2.c))
+              }
+          params.m=params2.m - (lr*params.m);
+          params.c=params2.c - (lr*params.c);
+          return params
+        }
+
+
+
+        function findparams(data){
+          var params=[];
+          var process_ = {m:0,c:0};
+          for (var i = 0; i < 100; i++) {
+              process_=stepgradient(process_,data,0.001);
+              ctx.clearRect(0,0,canvas.width,canvas.height);
+
+              ctx.beginPath();
+              ctx.moveTo(0*4,canvas.height - linecalc(process_.m,0,process_.c)*4);
+              ctx.lineTo(canvas.width*4, (canvas.height - linecalc(process_.m,canvas.width,process_.c))*5.5);
+              ctx.stroke();
+              setInterval(function(){
+               for (var i = 0; i < data.x.length; i++) {
+                ctx.fillRect((data.x[i]*4),(canvas.height - ((data.y[i])*4)),4,4);
+                }
+              }, 300);
+
+              console.log(process_);
+            }
+          }
+
+
+          var canvas = document.getElementById("canvas");
+          var ctx = canvas.getContext("2d");
+          ctx.fillStyle='purple';
+          ctx.textAlign = "center";
+          var mouse ={x:0,y:0};
+          var data={
+            x:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40],
+            y:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+          };
+
+          // var data={
+          //   x:[11,23,2,3,2,5,4,4,12,13,23,24,23,3,2,3,3,2,2,23,2,23,23,23,23,23,45,2,2,2,24,3,2,32,24,14,21,2,2,4],
+          //   y:[1,2,3,4,5,6,27,8,9,10,31,12,13,14,11,23,23,2,2,13,12,33,23,3,23,23,45,2,2,2,24,3,22,32,4,14,12,12,2,4]
+          // };
+          for (var i = 0; i < data.x.length; i++) {
+            ctx.fillRect((data.x[i])*5,(canvas.height - ((data.y[i])*4)),4,4);
+            }
+
+          findparams(data)
+        </script>
+    </html>
